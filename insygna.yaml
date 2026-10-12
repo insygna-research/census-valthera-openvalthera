@@ -27,3 +27,37 @@ tags:
   - "computer-vision"
   - "depth-estimation"
   - "python"
+
+# The app container: video-processor, the only compose service that is built. The local AWS emulators are sized under runtime.containers.
+resources:
+  cpu:
+    request: "500m"
+    limit: "2"
+  memory:
+    request: "1Gi"
+    limit: "2Gi"
+
+runtime:
+  containers:
+    - name: video-processor
+      role: app
+    - name: dynamodb-local
+      role: auxiliary
+      resources:
+        cpu: { request: "100m", limit: "500m" }
+        memory: { request: "256Mi", limit: "512Mi" }
+    - name: localstack
+      role: auxiliary
+      resources:
+        cpu: { request: "250m", limit: "1" }
+        memory: { request: "512Mi", limit: "1Gi" }
+    - name: sqs-local
+      role: auxiliary
+      resources:
+        cpu: { request: "50m", limit: "250m" }
+        memory: { request: "64Mi", limit: "256Mi" }
+    - name: cognito-local
+      role: auxiliary
+      resources:
+        cpu: { request: "50m", limit: "250m" }
+        memory: { request: "64Mi", limit: "256Mi" }
